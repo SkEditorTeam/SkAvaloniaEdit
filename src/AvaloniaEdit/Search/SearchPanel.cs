@@ -327,7 +327,11 @@ namespace AvaloniaEdit.Search
         {
             if (!IsReplaceMode) return;
 
-            FindNext();
+            if (_textArea.Selection.IsEmpty && _renderer.CurrentResults.Any())
+            {
+                _currentSearchResultIndex = (_currentSearchResultIndex + 1) % _renderer.CurrentResults.Count;
+                SelectResult(_renderer.CurrentResults.ElementAt(_currentSearchResultIndex));
+            }
             if (!_textArea.Selection.IsEmpty)
             {
                 _textArea.Selection.ReplaceSelectionWithText(ReplacePattern ?? string.Empty);

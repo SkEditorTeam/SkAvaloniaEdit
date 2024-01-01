@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <WarningsNotAsErrors>0612,0618</WarningsNotAsErrors>
-    <PackageId>Avalonia.AvaloniaEdit</PackageId>
-    <PackageDescription>This project is a port of AvalonEdit, a WPF-based text editor for Avalonia.</PackageDescription>
-    <PackageTags>editor;code-editor;avalonia;text-editor;netstandard</PackageTags>
+    <PackageId>SkAvaloniaEdit</PackageId>
+    <PackageDescription> Fork of AvaloniaEdit created for SkEditor </PackageDescription>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
