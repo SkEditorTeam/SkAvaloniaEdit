@@ -1063,6 +1063,16 @@ namespace AvaloniaEdit.Editing
         /// </summary>
         public event EventHandler<TextEventArgs> TextCopied;
 
+        /// <summary>
+        /// Occurs when text was pasted into the TextArea.
+        /// </summary>
+        public event EventHandler<TextEventArgs> TextPasted;
+
+        /// <summary>
+        /// Occurs when text is about to be pasted into the TextArea.
+        /// </summary>
+        public event EventHandler<TextEventArgs> TextPasting;
+
 
         event EventHandler ILogicalScrollable.ScrollInvalidated
         {
@@ -1073,6 +1083,17 @@ namespace AvaloniaEdit.Editing
         internal void OnTextCopied(TextEventArgs e)
         {
             TextCopied?.Invoke(this, e);
+        }
+
+        internal void OnTextPasted(TextEventArgs e)
+        {
+            TextPasted?.Invoke(this, e);
+        }
+
+        internal string OnTextPasting(TextEventArgs e)
+        {
+            TextPasting?.Invoke(this, e);
+            return e.Text;
         }
 
         public IList<RoutedCommandBinding> CommandBindings { get; } = new List<RoutedCommandBinding>();
@@ -1248,19 +1269,14 @@ namespace AvaloniaEdit.Editing
     /// <summary>
     /// EventArgs with text.
     /// </summary>
-    public class TextEventArgs : EventArgs
+    /// <remarks>
+    /// Creates a new TextEventArgs instance.
+    /// </remarks>
+    public class TextEventArgs(string text) : EventArgs
     {
         /// <summary>
         /// Gets the text.
         /// </summary>
-        public string Text { get; }
-
-        /// <summary>
-        /// Creates a new TextEventArgs instance.
-        /// </summary>
-        public TextEventArgs(string text)
-        {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
-        }
+        public string Text { get; set; } = text ?? throw new ArgumentNullException(nameof(text));
     }
 }

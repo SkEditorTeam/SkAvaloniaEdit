@@ -494,7 +494,7 @@ namespace AvaloniaEdit.Editing
             {
                 textArea.Document.BeginUpdate();
 
-                string text = null;
+                string text;
                 try
                 {
                     text = await TopLevel.GetTopLevel(textArea)?.Clipboard?.GetTextAsync();
@@ -505,11 +505,11 @@ namespace AvaloniaEdit.Editing
                     return;
                 }
 
-                if (text == null)
-                    return;
+                if (text == null) return;
 
 
                 text = GetTextToPaste(text, textArea);
+                text = textArea.OnTextPasting(new TextEventArgs(text)) ?? text;
 
                 if (!string.IsNullOrEmpty(text))
                 {
@@ -520,6 +520,7 @@ namespace AvaloniaEdit.Editing
                 args.Handled = true;
 
                 textArea.Document.EndUpdate();
+                textArea.OnTextPasted(new TextEventArgs(text));
             }
         }
 

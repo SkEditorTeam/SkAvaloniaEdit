@@ -352,7 +352,11 @@ namespace AvaloniaEdit
         public IHighlightingDefinition SyntaxHighlighting
         {
             get => GetValue(SyntaxHighlightingProperty);
-            set => SetValue(SyntaxHighlightingProperty, value);
+            set
+            {
+                if (value == null) return;
+                SetValue(SyntaxHighlightingProperty, value);
+            }
         }
 
         private IVisualLineTransformer _colorizer;
