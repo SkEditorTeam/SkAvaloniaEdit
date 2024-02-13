@@ -247,19 +247,20 @@ namespace AvaloniaEdit.Document
         }
 
         /// <summary>
-        /// Throws an InvalidOperationException if an undo group is current open.
+        /// Returns true if there is a problem with the undo stack that prevents further undo/redo operations.
         /// </summary>
-        private void ThrowIfUndoGroupOpen()
+        private bool CheckForUndoProblems()
         {
             if (_undoGroupDepth != 0)
             {
                 _undoGroupDepth = 0;
-                throw new InvalidOperationException("No undo group should be open at this point");
+                return true;
             }
             if (State != StateListen)
             {
-                throw new InvalidOperationException("This method cannot be called while an undo operation is being performed");
+                return true;
             }
+            return false;
         }
 
         private List<TextDocument> _affectedDocuments;
@@ -292,32 +293,31 @@ namespace AvaloniaEdit.Document
         /// </summary>
         public void Undo()
         {
-            ThrowIfUndoGroupOpen();
-            if (_undostack.Count > 0)
-            {
-                // disallow continuing undo groups after undo operation
-                LastGroupDescriptor = null; _allowContinue = false;
-                // fetch operation to undo and move it to redo stack
-                var uedit = _undostack.PopBack();
-                _redostack.PushBack(uedit);
-                State = StatePlayback;
-                try
-                {
-                    RunUndo(uedit);
-                }
-                finally
-                {
-                    State = StateListen;
-                    FileModified(-1);
-                    CallEndUpdateOnAffectedDocuments();
-                }
-                RecalcIsOriginalFile();
-                if (_undostack.Count == 0)
-                    NotifyPropertyChanged("CanUndo");
-                if (_redostack.Count == 1)
-                    NotifyPropertyChanged("CanRedo");
-            }
-        }
+            if (CheckForUndoProblems() || _undostack.Count <= 0) return;
+
+			// disallow continuing undo groups after undo operation
+			LastGroupDescriptor = null;
+            _allowContinue = false;
+			// fetch operation to undo and move it to redo stack
+			var uedit = _undostack.PopBack();
+			_redostack.PushBack(uedit);
+			State = StatePlayback;
+			try
+			{
+				RunUndo(uedit);
+			}
+			finally
+			{
+				State = StateListen;
+				FileModified(-1);
+				CallEndUpdateOnAffectedDocuments();
+			}
+			RecalcIsOriginalFile();
+			if (_undostack.Count == 0)
+				NotifyPropertyChanged(nameof(CanUndo));
+			if (_redostack.Count == 1)
+				NotifyPropertyChanged(nameof(CanRedo));
+		}
 
         internal void RunUndo(IUndoableOperation op)
         {
@@ -332,31 +332,30 @@ namespace AvaloniaEdit.Document
         /// </summary>
         public void Redo()
         {
-            ThrowIfUndoGroupOpen();
-            if (_redostack.Count > 0)
-            {
-                LastGroupDescriptor = null;
-                _allowContinue = false;
-                var uedit = _redostack.PopBack();
-                _undostack.PushBack(uedit);
-                State = StatePlayback;
-                try
-                {
-                    RunRedo(uedit);
-                }
-                finally
-                {
-                    State = StateListen;
-                    FileModified(1);
-                    CallEndUpdateOnAffectedDocuments();
-                }
-                RecalcIsOriginalFile();
-                if (_redostack.Count == 0)
-                    NotifyPropertyChanged("CanRedo");
-                if (_undostack.Count == 1)
-                    NotifyPropertyChanged("CanUndo");
-            }
-        }
+            if (CheckForUndoProblems() || _redostack.Count <= 0) return;
+
+			LastGroupDescriptor = null;
+			_allowContinue = false;
+			var uedit = _redostack.PopBack();
+			_undostack.PushBack(uedit);
+			State = StatePlayback;
+
+			try
+			{
+				RunRedo(uedit);
+			}
+			finally
+			{
+				State = StateListen;
+				FileModified(1);
+				CallEndUpdateOnAffectedDocuments();
+			}
+
+			RecalcIsOriginalFile();
+
+			if (_redostack.Count == 0) NotifyPropertyChanged(nameof(CanRedo));
+			if (_undostack.Count == 1) NotifyPropertyChanged(nameof(CanUndo));
+		}
 
         internal void RunRedo(IUndoableOperation op)
         {
@@ -435,7 +434,8 @@ namespace AvaloniaEdit.Document
         /// </summary>
         public void ClearAll()
         {
-            ThrowIfUndoGroupOpen();
+            if (CheckForUndoProblems()) return;
+
             _actionCountInUndoGroup = 0;
             _optionalActionCount = 0;
             if (_undostack.Count != 0)

@@ -17,6 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
@@ -69,10 +70,8 @@ namespace AvaloniaEdit.Editing
 
         private void StartBlinkAnimation()
         {
-            // TODO
-            var blinkTime = TimeSpan.FromMilliseconds(500); //Win32.CaretBlinkTime;
-            _blink = true; // the caret should visible initially
-                          // This is important if blinking is disabled (system reports a negative blinkTime)
+            var blinkTime = TimeSpan.FromMilliseconds(500);
+            _blink = true;
             if (blinkTime.TotalMilliseconds > 0)
             {
                 _caretBlinkTimer.Interval = blinkTime;
@@ -87,31 +86,31 @@ namespace AvaloniaEdit.Editing
 
         internal IBrush CaretBrush;
 
-        public override void Render(DrawingContext drawingContext)
-        {
-            base.Render(drawingContext);
+		public override void Render(DrawingContext drawingContext)
+		{
+			base.Render(drawingContext);
 
-            if (_isVisible && _blink)
-            {
-                var caretBrush = CaretBrush ?? TextView.GetValue(TextBlock.ForegroundProperty);
+			if (_isVisible && _blink)
+			{
+				var caretBrush = CaretBrush ?? TextView.GetValue(TextBlock.ForegroundProperty);
 
-                if (_textArea.OverstrikeMode)
-                {
-                    if (caretBrush is ISolidColorBrush scBrush)
-                    {
-                        var brushColor = scBrush.Color;
-                        var newColor = Color.FromArgb(100, brushColor.R, brushColor.G, brushColor.B);
-                        caretBrush = new SolidColorBrush(newColor);
-                    }
-                }
+				if (_textArea.OverstrikeMode)
+				{
+					if (caretBrush is ISolidColorBrush scBrush)
+					{
+						var brushColor = scBrush.Color;
+						var newColor = Color.FromArgb(100, brushColor.R, brushColor.G, brushColor.B);
+						caretBrush = new SolidColorBrush(newColor);
+					}
+				}
 
-                var r = new Rect(_caretRectangle.X - TextView.HorizontalOffset,
-                                  _caretRectangle.Y - TextView.VerticalOffset,
-                                  _caretRectangle.Width,
-                                  _caretRectangle.Height);
+				var r = new Rect(_caretRectangle.X - TextView.HorizontalOffset,
+								  _caretRectangle.Y - TextView.VerticalOffset,
+								  _caretRectangle.Width,
+								  _caretRectangle.Height);
 
-                drawingContext.FillRectangle(caretBrush, PixelSnapHelpers.Round(r, PixelSnapHelpers.GetPixelSize(this)));
-            }
-        }
-    }
+				drawingContext.FillRectangle(caretBrush, PixelSnapHelpers.Round(r, PixelSnapHelpers.GetPixelSize(this)));
+			}
+		}
+	}
 }
