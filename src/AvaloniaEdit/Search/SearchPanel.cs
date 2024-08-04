@@ -294,6 +294,8 @@ namespace AvaloniaEdit.Search
             }
         }
 
+        public void FindNext() => FindNext(-1);
+
         /// <summary>
         /// Moves to the previous occurrence in the file.
         /// </summary>
@@ -451,13 +453,13 @@ namespace AvaloniaEdit.Search
             {
                 case Key.Enter:
                     e.Handled = true;
-                    if (e.KeyModifiers.HasFlag(KeyModifiers.Shift))
+                    if (IsReplaceMode)
                     {
-                        FindPrevious();
+                        (e.KeyModifiers.HasFlag(KeyModifiers.Control | KeyModifiers.Alt) ? (Action)ReplaceAll : ReplaceNext)();
                     }
                     else
                     {
-                        FindNext();
+                        (e.KeyModifiers.HasFlag(KeyModifiers.Shift) ? (Action)FindPrevious : FindNext)();
                     }
                     break;
                 case Key.Escape:

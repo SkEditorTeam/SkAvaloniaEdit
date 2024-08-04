@@ -47,12 +47,12 @@ namespace AvaloniaEdit.Search
         /// <summary>
         /// Replaces the next occurrence in the document.
         /// </summary>
-        public static readonly RoutedCommand ReplaceNext = new RoutedCommand(nameof(ReplaceNext), new KeyGesture(Key.R, KeyModifiers.Alt));
+        public static readonly RoutedCommand ReplaceNext = new RoutedCommand(nameof(ReplaceNext), new KeyGesture(Key.Enter, KeyModifiers.None));
 
         /// <summary>
         /// Replaces all the occurrences in the document.
         /// </summary>
-        public static readonly RoutedCommand ReplaceAll = new RoutedCommand(nameof(ReplaceAll), new KeyGesture(Key.A, KeyModifiers.Alt));
+        public static readonly RoutedCommand ReplaceAll = new RoutedCommand(nameof(ReplaceAll), new KeyGesture(Key.Enter, KeyModifiers.Control | KeyModifiers.Alt));
     }
 
     /// <summary>

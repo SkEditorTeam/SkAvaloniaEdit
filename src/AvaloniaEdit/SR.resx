@@ -151,10 +151,10 @@
     <value>{0} of {1}</value>
   </data>
   <data name="SearchReplaceAll" xml:space="preserve">
-    <value>Replace all (Alt+A)</value>
+    <value>Replace all (Ctrl+Alt+Enter)</value>
   </data>
   <data name="SearchReplaceNext" xml:space="preserve">
-    <value>Replace next (Alt+R)</value>
+    <value>Replace next (Enter)</value>
   </data>
   <data name="SearchToggleReplace" xml:space="preserve">
     <value>Toggle between find and replace modes</value>
