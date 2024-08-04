@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
+	  <PackageId>SkAvaloniaEdit.TextMate</PackageId>
     <PackageDescription>TextMate integration for AvaloniaEdit.</PackageDescription>
   </PropertyGroup>
 
@@ -11,9 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
     <PackageReference Include="TextMateSharp" Version="$(TextMateSharpVersion)" />
     <PackageReference Include="TextMateSharp.Grammars" Version="$(TextMateSharpVersion)" />
   </ItemGroup>
-
 </Project>
