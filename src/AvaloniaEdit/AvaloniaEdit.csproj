@@ -4,9 +4,9 @@
     <TargetFrameworks>net6.0</TargetFrameworks>
     <WarningsNotAsErrors>0612,0618</WarningsNotAsErrors>
     <PackageId>SkAvaloniaEdit</PackageId>
-    <PackageDescription> Fork of AvaloniaEdit created for SkEditor </PackageDescription>
+    <PackageDescription>Fork of AvaloniaEdit created for SkEditor</PackageDescription>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>11.0.6.7</Version>
+    <Version>11.0.6.8</Version>
   </PropertyGroup>
 
   <ItemGroup>
