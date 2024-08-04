@@ -863,7 +863,7 @@ namespace AvaloniaEdit.Rendering
         /// Additonal amount that allows horizontal scrolling past the end of the longest line.
         /// This is necessary to ensure the caret always is visible, even when it is at the end of the longest line.
         /// </summary>
-        private const double AdditionalHorizontalScrollAmount = 3;
+        private const double AdditionalHorizontalScrollAmount = 100;
 
         private Size _lastAvailableSize;
         private bool _inMeasure;
