@@ -3,8 +3,9 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
-	  <PackageId>SkAvaloniaEdit.TextMate</PackageId>
+	<PackageId>SkAvaloniaEdit.TextMate</PackageId>
     <PackageDescription>TextMate integration for AvaloniaEdit.</PackageDescription>
+	<Version>11.0.7</Version>
   </PropertyGroup>
 
   <ItemGroup>
