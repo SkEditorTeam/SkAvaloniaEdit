@@ -5,7 +5,7 @@
     <LangVersion>latest</LangVersion>
 	<PackageId>SkAvaloniaEdit.TextMate</PackageId>
     <PackageDescription>TextMate integration for AvaloniaEdit.</PackageDescription>
-	<Version>11.0.7</Version>
+	<Version>11.1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
