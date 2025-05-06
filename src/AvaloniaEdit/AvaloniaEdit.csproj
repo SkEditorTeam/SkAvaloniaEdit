@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <WarningsNotAsErrors>0612,0618</WarningsNotAsErrors>
     <PackageId>SkAvaloniaEdit</PackageId>
     <PackageDescription>Fork of AvaloniaEdit created for SkEditor</PackageDescription>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>11.1.2</Version>
+    <Version>11.3.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
