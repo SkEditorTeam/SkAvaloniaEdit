@@ -54,9 +54,9 @@ namespace AvaloniaEdit.Utils
 			#endif
 			if (length == 0)
 				return string.Empty;
-			char[] buffer = new char[length];
-			rope.CopyTo(startIndex, buffer, 0, length);
-			return new string(buffer);
+			
+			return string.Create(length, (rope, startIndex, length), (dest, x) =>
+				x.rope.CopyTo(x.startIndex, dest, 0, x.length));
 		}
 		
 		/// <summary>

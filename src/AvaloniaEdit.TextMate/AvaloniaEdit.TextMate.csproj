@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
 	<PackageId>SkAvaloniaEdit.TextMate</PackageId>
     <PackageDescription>TextMate integration for AvaloniaEdit.</PackageDescription>
-	<Version>11.1.1</Version>
+	<Version>11.3.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="TextMateSharp" Version="1.0.65" />
-    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.65" />
+    <PackageReference Include="TextMateSharp" Version="1.0.66" />
+    <PackageReference Include="TextMateSharp.Grammars" Version="1.0.66" />
   </ItemGroup>
 </Project>
