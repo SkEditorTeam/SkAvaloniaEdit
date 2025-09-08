@@ -55,8 +55,14 @@ namespace AvaloniaEdit.Utils
 			if (length == 0)
 				return string.Empty;
 			
+#if NET6_0_OR_GREATER
 			return string.Create(length, (rope, startIndex, length), (dest, x) =>
 				x.rope.CopyTo(x.startIndex, dest, 0, x.length));
+#else
+			char[] buffer = new char[length];
+			rope.CopyTo(startIndex, buffer, 0, length);
+			return new string(buffer);
+#endif
 		}
 		
 		/// <summary>
