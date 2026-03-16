@@ -465,6 +465,18 @@ namespace AvaloniaEdit
             }
         }
 
+        public double ScrollStepLines
+        {
+            get;
+            set
+            {
+                if (!(Math.Abs(field - value) > 0.01)) return;
+
+                field = value;
+                OnPropertyChanged(nameof(ScrollStepLines));
+            }
+        } = 3.0;
+
         private double _wordWrapIndentation;
 
         /// <summary>

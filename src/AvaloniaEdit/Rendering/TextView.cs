@@ -2092,7 +2092,7 @@ namespace AvaloniaEdit.Rendering
 
         bool ILogicalScrollable.IsLogicalScrollEnabled => true;
 
-        Size ILogicalScrollable.ScrollSize => new Size(10, 50);
+        Size ILogicalScrollable.ScrollSize => new Size(10.0, DefaultLineHeight * Options.ScrollStepLines);
 
         Size ILogicalScrollable.PageScrollSize => new Size(10, 100);
 
