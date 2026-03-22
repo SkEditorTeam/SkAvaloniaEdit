@@ -446,8 +446,6 @@ namespace AvaloniaEdit
             }
         } = 3.0;
 
-        private double _wordWrapIndentation;
-
         /// <summary>
         /// Gets/Sets the indentation used for all lines except the first when word-wrapping.
         /// The default value is 0.
