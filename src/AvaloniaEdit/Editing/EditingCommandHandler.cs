@@ -197,9 +197,7 @@ namespace AvaloniaEdit.Editing
                     {
                         foreach (var segment in segments.Reverse())
                         {
-                            ISegment[] deletableSegments = textArea.GetDeletableSegments(segment);
-                            ISegment[] reversedDeletableSegments = System.Linq.Enumerable.Reverse(deletableSegments).ToArray();
-                            foreach (ISegment writableSegment in reversedDeletableSegments)
+                            foreach (var writableSegment in System.Linq.Enumerable.Reverse(textArea.GetDeletableSegments(segment)))
                             {
                                 transformSegment(textArea, writableSegment);
                             }
@@ -417,13 +415,18 @@ namespace AvaloniaEdit.Editing
             var text = textArea.Selection.GetText();
             text = TextUtilities.NormalizeNewLines(text, Environment.NewLine);
 
-            SetClipboardText(text, textArea);
+
+            var df = new DataTransfer();
+            var item = new DataTransferItem();
+            item.Set(DataFormat.Text, text);
+            df.Add(item);
+            SetClipboardText(df, textArea);
 
             textArea.OnTextCopied(new TextEventArgs(text));
             return true;
         }
 
-        public static bool ConfirmDataFormat(TextArea textArea, DataObject dataObject, string format)
+        public static bool ConfirmDataFormat<T>(TextArea textArea, DataTransfer dataObject, DataFormat<T> format) where T : class
         {
             return true;
             ////var e = new DataObjectSettingDataEventArgs(dataObject, format);
@@ -431,11 +434,11 @@ namespace AvaloniaEdit.Editing
             ////return !e.CommandCancelled;
         }
 
-        private static void SetClipboardText(string text, Visual visual)
+        private static void SetClipboardText(DataTransfer text, Visual visual)
         {
             try
             {
-                TopLevel.GetTopLevel(visual)?.Clipboard?.SetTextAsync(text);
+                TopLevel.GetTopLevel(visual)?.Clipboard?.SetDataAsync(text);
             }
             catch (Exception)
             {
@@ -479,8 +482,11 @@ namespace AvaloniaEdit.Editing
             //textArea.RaiseEvent(copyingEventArgs);
             //if (copyingEventArgs.CommandCancelled)
             //    return false;
-
-            SetClipboardText(text, textArea);
+            var df = new DataTransfer();
+            var item = new DataTransferItem();
+            item.Set(DataFormat.Text, text);
+            df.Add(item);
+            SetClipboardText(df, textArea);
 
             textArea.OnTextCopied(new TextEventArgs(text));
             return true;
@@ -506,7 +512,8 @@ namespace AvaloniaEdit.Editing
                 string text;
                 try
                 {
-                    text = await TopLevel.GetTopLevel(textArea)?.Clipboard?.GetTextAsync();
+                    var data = await TopLevel.GetTopLevel(textArea)?.Clipboard?.TryGetDataAsync();
+                    text = await data.TryGetTextAsync();
                 }
                 catch (Exception)
                 {
@@ -537,11 +544,11 @@ namespace AvaloniaEdit.Editing
             }
         }
 
-        internal static string GetTextToPaste(IDataObject dataObject, TextArea textArea)
+        internal static string GetTextToPaste(IDataTransfer dataObject, TextArea textArea)
         {
-            if (dataObject.Contains(DataFormats.Text))
+            if (dataObject.Contains(DataFormat.Text))
             {
-                return GetTextToPaste((string)dataObject.Get(DataFormats.Text), textArea);
+                return GetTextToPaste((string)dataObject.TryGetText() ?? "", textArea);
             }
 
             return null;
