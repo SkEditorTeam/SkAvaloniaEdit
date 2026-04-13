@@ -222,6 +222,17 @@ namespace AvaloniaEdit
                     HorizontalScrollBarVisibility = _horizontalScrollBarVisibilityBck;
                 }
             }
+            else if (change.Property == ScrollOffsetProperty)
+            {
+                if (ScrollViewer != null)
+                {
+                    var newOffset = change.GetNewValue<Vector>();
+                    if (ScrollViewer.Offset != newOffset)
+                    {
+                        ScrollViewer.Offset = newOffset;
+                    }
+                }
+            }
         }
 
         private void OnUndoStackPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -305,6 +316,21 @@ namespace AvaloniaEdit
             ScrollViewer.Content = TextArea;
 
             searchPanel = SearchPanel.Install(this);
+            
+            if (ScrollViewer != null)
+            {
+                ScrollViewer.PropertyChanged += (sender, args) =>
+                {
+                    if (args.Property == ScrollViewer.OffsetProperty)
+                    {
+                        var currentOffset = (Vector)args.NewValue;
+                        if (ScrollOffset != currentOffset)
+                        {
+                            ScrollOffset = currentOffset;
+                        }
+                    }
+                };
+            }
         }
 
         protected override void OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs e)
@@ -344,6 +370,15 @@ namespace AvaloniaEdit
         /// This property can return null if the template has not been applied / does not contain a scroll viewer.
         /// </summary>
         public ScrollViewer ScrollViewer { get; private set; }
+        
+        public static readonly StyledProperty<Vector> ScrollOffsetProperty =
+            AvaloniaProperty.Register<TextEditor, Vector>(nameof(ScrollOffset), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+
+        public Vector ScrollOffset
+        {
+            get => GetValue(ScrollOffsetProperty);
+            set => SetValue(ScrollOffsetProperty, value);
+        }
 
         #endregion
 

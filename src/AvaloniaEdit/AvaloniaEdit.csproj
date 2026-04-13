@@ -6,7 +6,7 @@
     <PackageId>SkAvaloniaEdit</PackageId>
     <PackageDescription>Fork of AvaloniaEdit created for SkEditor</PackageDescription>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-    <Version>12.0.0-rc1</Version>
+    <Version>12.0.0-rc3</Version>
   </PropertyGroup>
 
   <ItemGroup>
