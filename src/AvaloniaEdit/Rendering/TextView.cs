@@ -151,6 +151,10 @@ namespace AvaloniaEdit.Rendering
             _document = newValue;
             ClearScrollData();
             ClearVisualLines();
+            
+            _cachedMaxWidth = 0;
+            _cachedMaxWidthLine = null;
+            
             if (newValue != null)
             {
                 TextDocumentWeakEventManager.Changing.AddHandler(newValue, OnChanging);
@@ -173,6 +177,17 @@ namespace AvaloniaEdit.Rendering
 
         private void OnChanging(object sender, DocumentChangeEventArgs e)
         {
+            if (_cachedMaxWidthLine != null)
+            {
+                if (_cachedMaxWidthLine.IsDeleted ||
+                    (e.Offset <= _cachedMaxWidthLine.EndOffset && 
+                     e.Offset + e.RemovalLength >= _cachedMaxWidthLine.Offset))
+                {
+                    _cachedMaxWidth = 0;
+                    _cachedMaxWidthLine = null;
+                }
+            }
+            
             Redraw(e.Offset, e.RemovalLength);
         }
 
@@ -868,7 +883,9 @@ namespace AvaloniaEdit.Rendering
 
         private Size _lastAvailableSize;
         private bool _inMeasure;
-
+        private double _cachedMaxWidth = 0;
+        private DocumentLine _cachedMaxWidthLine = null;
+        
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -968,8 +985,11 @@ namespace AvaloniaEdit.Rendering
             var elementGeneratorsArray = _elementGenerators.ToArray();
             var lineTransformersArray = _lineTransformers.ToArray();
             var nextLine = firstLineInView;
-            double maxWidth = 0;
             var yPos = -_clippedPixelsOnTop;
+
+            double currentVisibleMaxWidth = 0;
+            DocumentLine currentWidestLine = null;
+            
             while (yPos < availableSize.Height && nextLine != null)
             {
                 var visualLine = GetVisualLine(nextLine.LineNumber) ??
@@ -986,11 +1006,20 @@ namespace AvaloniaEdit.Rendering
 
                 foreach (var textLine in visualLine.TextLines)
                 {
-                    if (textLine.WidthIncludingTrailingWhitespace > maxWidth)
-                        maxWidth = textLine.WidthIncludingTrailingWhitespace;
+                    if (textLine.WidthIncludingTrailingWhitespace > currentVisibleMaxWidth)
+                    {
+                        currentVisibleMaxWidth = textLine.WidthIncludingTrailingWhitespace;
+                        currentWidestLine = visualLine.FirstDocumentLine;
+                    }
                 }
 
                 _newVisualLines.Add(visualLine);
+            }
+            
+            if (currentVisibleMaxWidth >= _cachedMaxWidth)
+            {
+                _cachedMaxWidth = currentVisibleMaxWidth;
+                _cachedMaxWidthLine = currentWidestLine;
             }
 
             foreach (var line in _allVisualLines)
@@ -1011,7 +1040,8 @@ namespace AvaloniaEdit.Rendering
                                                     "This can happen when Redraw() is called during measure for lines " +
                                                     "that are already constructed.");
             }
-            return maxWidth;
+
+            return _cachedMaxWidth;
         }
         #endregion
 
