@@ -1976,6 +1976,10 @@ namespace AvaloniaEdit.Rendering
                 RecreateCachedElements();
                 // and we need to re-measure the font metrics:
                 InvalidateDefaultTextMetrics();
+                
+                _cachedMaxWidth = 0;
+                _cachedMaxWidthLine = null;
+                
                 Redraw();
             }
             if (change.Property == ColumnRulerPenProperty)
