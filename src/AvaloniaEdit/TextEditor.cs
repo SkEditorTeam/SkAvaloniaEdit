@@ -316,18 +316,26 @@ namespace AvaloniaEdit
             ScrollViewer.Content = TextArea;
 
             searchPanel = SearchPanel.Install(this);
-            
+    
             if (ScrollViewer != null)
             {
-                ScrollViewer.PropertyChanged += (sender, args) =>
+                if (ScrollViewer.Offset != ScrollOffset)
                 {
-                    if (args.Property == ScrollViewer.OffsetProperty)
+                    ScrollViewer.Offset = ScrollOffset;
+                }
+
+                ScrollViewer.PropertyChanged += (_, args) =>
+                {
+                    if (args.Property != ScrollViewer.OffsetProperty) return;
+                    if (ScrollViewer.Viewport is { Width: 0, Height: 0 })
                     {
-                        var currentOffset = (Vector)args.NewValue;
-                        if (ScrollOffset != currentOffset)
-                        {
-                            ScrollOffset = currentOffset;
-                        }
+                        return;
+                    }
+
+                    var currentOffset = (Vector)args.NewValue;
+                    if (ScrollOffset != currentOffset)
+                    {
+                        ScrollOffset = currentOffset;
                     }
                 };
             }
