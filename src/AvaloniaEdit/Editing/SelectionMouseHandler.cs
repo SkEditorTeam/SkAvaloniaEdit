@@ -178,6 +178,11 @@ namespace AvaloniaEdit.Editing
 
         DragDropEffects GetEffect(DragEventArgs e)
         {
+            if (e.DataTransfer.Contains(DataFormat.File))
+            {
+                return DragDropEffects.Copy;
+            }
+            
             if (e.DataTransfer.Contains(DataFormat.Text))
             {
                 e.Handled = true;
@@ -225,6 +230,9 @@ namespace AvaloniaEdit.Editing
         {
             try
             {
+                if (e.DataTransfer.Contains(DataFormat.File))
+                    return;
+                
                 DragDropEffects effect = GetEffect(e);
                 e.DragEffects = effect;
                 if (effect != DragDropEffects.None)
