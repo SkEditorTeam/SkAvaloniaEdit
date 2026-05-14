@@ -187,6 +187,12 @@ namespace AvaloniaEdit.TextMate
                 var range = _invalidRange.Value;
                 int startLine = Math.Clamp(range.StartLine, 0, _documentSnapshot.LineCount - 1);
                 int endLine = Math.Clamp(range.EndLine, 0, _documentSnapshot.LineCount - 1);
+                
+                if (endLine - startLine <= 100)
+                {
+                    ForceTokenization(startLine, endLine);
+                }
+                
                 InvalidateLineRange(startLine, endLine);
             }
             finally
