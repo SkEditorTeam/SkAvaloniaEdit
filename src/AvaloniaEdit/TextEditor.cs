@@ -62,6 +62,7 @@ namespace AvaloniaEdit
             FontFamilyProperty.Changed.Subscribe(OnFontFamilyPropertyChanged);
             FontSizeProperty.Changed.Subscribe(OnFontSizePropertyChanged);
             SearchResultsBrushProperty.Changed.Subscribe(SearchResultsBrushChangedCallback);
+            CaretOffsetProperty.Changed.Subscribe(OnCaretOffsetPropertyChanged);
         }
 
         /// <summary>
@@ -89,6 +90,11 @@ namespace AvaloniaEdit
             SetValue(DocumentProperty, document);
 
             textArea[!BackgroundProperty] = this[!BackgroundProperty];
+            
+            textArea.Caret.PositionChanged += (_, _) =>
+            {
+                SetCurrentValue(CaretOffsetProperty, textArea.Caret.Offset);
+            };
         }
 
         #endregion
@@ -665,6 +671,15 @@ namespace AvaloniaEdit
 
             editor?.SearchPanel?.SetSearchResultsBrush(e.GetNewValue<IBrush>());
         }
+        
+        private static void OnCaretOffsetPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            var editor = e.Sender as TextEditor;
+            if (editor == null) return;
+            var newOffset = e.GetNewValue<int>();
+            if (editor.textArea.Caret.Offset != newOffset)
+                editor.textArea.Caret.Offset = newOffset;
+        }
 
         #endregion
 
@@ -1047,14 +1062,8 @@ namespace AvaloniaEdit
         /// </summary>
         public int CaretOffset
         {
-            get
-            {
-                return textArea.Caret.Offset;
-            }
-            set
-            {
-                textArea.Caret.Offset = value;
-            }
+            get => GetValue(CaretOffsetProperty);
+            set => SetValue(CaretOffsetProperty, value);
         }
 
         /// <summary>
