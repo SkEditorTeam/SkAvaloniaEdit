@@ -1038,6 +1038,9 @@ namespace AvaloniaEdit
                 }
             }
         }
+        
+        public static readonly StyledProperty<int> CaretOffsetProperty =
+            AvaloniaProperty.Register<TextEditor, int>(nameof(CaretOffset), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
 
         /// <summary>
         /// Gets/sets the caret position.
