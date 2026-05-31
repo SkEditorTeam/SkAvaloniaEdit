@@ -1056,6 +1056,7 @@ namespace AvaloniaEdit.Rendering
             p.typeface = this.CreateTypeface();
             p.fontRenderingEmSize = FontSize;
             p.foregroundBrush = GetValue(TextElement.ForegroundProperty);
+            p.fontFeatures = GetValue(TextElement.FontFeaturesProperty);
             ExtensionMethods.CheckIsFrozen(p.foregroundBrush);
             p.cultureInfo = CultureInfo.CurrentCulture;
             return p;
@@ -1961,7 +1962,8 @@ namespace AvaloniaEdit.Rendering
                      || change.Property == NonPrintableCharacterBrushProperty
                      || change.Property == LinkTextBackgroundBrushProperty
                      || change.Property == LinkTextForegroundBrushProperty
-                     || change.Property == LinkTextUnderlineProperty)
+                     || change.Property == LinkTextUnderlineProperty
+                     || change.Property == TextElement.FontFeaturesProperty)
             {
                 // changing brushes requires recreating the cached elements
                 RecreateCachedElements();

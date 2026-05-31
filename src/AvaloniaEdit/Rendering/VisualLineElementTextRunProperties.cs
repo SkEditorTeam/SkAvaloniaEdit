@@ -40,6 +40,7 @@ namespace AvaloniaEdit.Rendering
 		private double _fontRenderingEmSize;
 		private IBrush _foregroundBrush;
 		private Typeface _typeface;
+        private FontFeatureCollection _fontFeatures;
 
 		private TextDecorationCollection _textDecorations;
 		//TextEffectCollection textEffects;
@@ -65,6 +66,7 @@ namespace AvaloniaEdit.Rendering
 			_foregroundBrush = textRunProperties.ForegroundBrush;
 			_typeface = textRunProperties.Typeface;
 			_textDecorations = textRunProperties.TextDecorations;
+            _fontFeatures = textRunProperties.FontFeatures;
 			
 			/*if (textDecorations != null && !textDecorations.IsFrozen) {
 				textDecorations = textDecorations.Clone();
@@ -167,6 +169,17 @@ namespace AvaloniaEdit.Rendering
 		{
 			_typeface = value;
 		}
+        
+        /// <inheritdoc/>
+        public override FontFeatureCollection FontFeatures => _fontFeatures;
+
+        /// <summary>
+        /// Sets the <see cref="FontFeatures"/>.
+        /// </summary>
+        public void SetFontFeatures(FontFeatureCollection value)
+        {
+            _fontFeatures = value;
+        }
 
 		/// <summary>
 		/// Gets the text decorations. The value may be null, a frozen <see cref="TextDecorationCollection"/>

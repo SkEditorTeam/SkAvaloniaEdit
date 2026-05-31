@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Input;
@@ -60,6 +61,7 @@ namespace AvaloniaEdit
             ShowLineNumbersProperty.Changed.Subscribe(OnShowLineNumbersChanged);
             LineNumbersForegroundProperty.Changed.Subscribe(OnLineNumbersForegroundChanged);
             FontFamilyProperty.Changed.Subscribe(OnFontFamilyPropertyChanged);
+            FontFeaturesProperty.Changed.Subscribe(OnFontFeaturesPropertyChanged);
             FontSizeProperty.Changed.Subscribe(OnFontSizePropertyChanged);
             SearchResultsBrushProperty.Changed.Subscribe(SearchResultsBrushChangedCallback);
             CaretOffsetProperty.Changed.Subscribe(OnCaretOffsetPropertyChanged);
@@ -663,6 +665,12 @@ namespace AvaloniaEdit
             var editor = e.Sender as TextEditor;
 
             editor?.TextArea.TextView.SetValue(FontSizeProperty, e.NewValue);
+        }
+        
+        private static void OnFontFeaturesPropertyChanged(AvaloniaPropertyChangedEventArgs e)
+        {
+            var editor = e.Sender as TextEditor;
+            editor?.TextArea.TextView.SetValue(TextElement.FontFeaturesProperty, e.NewValue);
         }
 
         private static void SearchResultsBrushChangedCallback(AvaloniaPropertyChangedEventArgs e)

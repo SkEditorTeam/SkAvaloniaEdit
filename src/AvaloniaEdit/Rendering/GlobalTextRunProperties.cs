@@ -30,6 +30,7 @@ namespace AvaloniaEdit.Rendering
 		internal double fontRenderingEmSize;
 		internal IBrush? foregroundBrush;
 		internal CultureInfo? cultureInfo;
+        internal FontFeatureCollection? fontFeatures;
 
 		public override Typeface Typeface => typeface;
 
@@ -39,6 +40,7 @@ namespace AvaloniaEdit.Rendering
 		public override TextDecorationCollection? TextDecorations => null;
 		public override IBrush? ForegroundBrush => foregroundBrush;
 		public override IBrush? BackgroundBrush => null;
+        public override FontFeatureCollection? FontFeatures => fontFeatures;
 
 		public override CultureInfo? CultureInfo => cultureInfo;
 		//public override TextEffectCollection TextEffects { get { return null; } }
