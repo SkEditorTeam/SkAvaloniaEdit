@@ -240,11 +240,6 @@ namespace AvaloniaEdit.TextMate
                 if (_model != null)
                 {
                     _model.SetGrammar(grammar);
-
-                    if (grammar != null)
-                    {
-                        _model.InvalidateLine(0);
-                    }
                 }
             }
         }
