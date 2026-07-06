@@ -27,6 +27,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Documents;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
+using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
@@ -389,7 +390,7 @@ namespace AvaloniaEdit
         public ScrollViewer ScrollViewer { get; private set; }
         
         public static readonly StyledProperty<Vector> ScrollOffsetProperty =
-            AvaloniaProperty.Register<TextEditor, Vector>(nameof(ScrollOffset), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+            AvaloniaProperty.Register<TextEditor, Vector>(nameof(ScrollOffset), defaultBindingMode: BindingMode.TwoWay);
 
         public Vector ScrollOffset
         {
@@ -1063,7 +1064,7 @@ namespace AvaloniaEdit
         }
         
         public static readonly StyledProperty<int> CaretOffsetProperty =
-            AvaloniaProperty.Register<TextEditor, int>(nameof(CaretOffset), defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
+            AvaloniaProperty.Register<TextEditor, int>(nameof(CaretOffset), defaultBindingMode: BindingMode.TwoWay);
 
         /// <summary>
         /// Gets/sets the caret position.
@@ -1323,6 +1324,20 @@ namespace AvaloniaEdit
             get => GetValue(VerticalScrollBarVisibilityProperty);
             set => SetValue(VerticalScrollBarVisibilityProperty, value);
         }
+
+        public static readonly AttachedProperty<Action<double>> SmoothScrollActionProperty =
+            AvaloniaProperty.RegisterAttached<TextEditor, ScrollViewer, Action<double>>("SmoothScrollAction");
+
+        public static void SetSmoothScrollAction(ScrollViewer element, Action<double> value)
+        {
+            element.SetValue(SmoothScrollActionProperty, value);
+        }
+
+        public static Action<double> GetSmoothScrollAction(ScrollViewer element)
+        {
+            return element.GetValue(SmoothScrollActionProperty);
+        }
+
         #endregion
 
         object IServiceProvider.GetService(Type serviceType)
@@ -1437,7 +1452,23 @@ namespace AvaloniaEdit
                 }
 
                 if (targetX != ScrollViewer.Offset.X || targetY != ScrollViewer.Offset.Y)
-                    ScrollViewer.Offset = new Vector(targetX, targetY);
+                {
+                    Action<double> smoothScrollAction = ScrollViewer.GetValue(SmoothScrollActionProperty);
+
+                    if (smoothScrollAction != null)
+                    {
+                        smoothScrollAction(targetY);
+
+                        if (targetX != ScrollViewer.Offset.X)
+                        {
+                            ScrollViewer.Offset = new Vector(targetX, ScrollViewer.Offset.Y);
+                        }
+                    }
+                    else
+                    {
+                        ScrollViewer.Offset = new Vector(targetX, targetY);
+                    }
+                }
             }
         }
     }
